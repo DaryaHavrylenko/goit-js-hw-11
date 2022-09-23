@@ -2,33 +2,52 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
 import { fetchImages, resetPage } from "./fetchImages";
+import LoadMoreBtn from "./onLoadMoreBtn";
 
 
 const searchForm = document.querySelector('.search-form');
 
 const input = document.querySelector('input');
-
 const btnSubmit = document.querySelector('button');
 const galleryItems = document.querySelector('.gallery');
-const btnLoadMore = document.querySelector(".load-more");
+// const btnLoadMore = document.querySelector(".load-more");
+
+const loadMoreBtn = new LoadMoreBtn({
+  selector: '[data-action="load-more"]',
+  hidden: true,
+});
+
 
 searchForm.addEventListener('submit', onSearch);
-btnLoadMore.addEventListener('click', onLoadMore)
+loadMoreBtn.refs.button.addEventListener('click', fetchButtonOnLoadMore)
 
+let searchQuery = ''; 
 
-
-  function onSearch(e) {
+function onSearch(e) {
     e.preventDefault();
-    searchQuery = e.currentTarget.elements.searchQuery.value;
-    resetPage();
-    fetchImages(searchQuery).then(r => renderMarkUp(r)).catch(err => console.log(err));
+    
+  searchQuery = e.currentTarget.elements.searchQuery.value;
+  if (searchQuery === '') {
+    clearContainer();
+    Notiflix.Notify.warning('Please, fill in the input field!');
+    return;
+  }
+ 
+  loadMoreBtn.show();
+  resetPage();
+  clearContainer();
+  fetchButtonOnLoadMore();
     
     }
  
 
-     function renderMarkUp(r) {
-const markUp = r.map(({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) => {
-  return `<div class="photo-card">
+function renderMarkUp(r) {
+  if (r["hits"].length === 0) {
+    Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+    return;
+  }
+   const markUp = r["hits"].map(({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) => 
+   `<div class="photo-card">
     <a class="gallery__item" href="${largeImageURL}">
   <img src="${webformatURL}" alt="${tags}" loading="lazy" />
   </a>
@@ -46,13 +65,26 @@ const markUp = r.map(({webformatURL, largeImageURL, tags, likes, views, comments
       <b>Downloads<span class="downloads">${downloads}</span></b>
     </p>
   </div>
-</div>`;
-}).join('');
-galleryItems.innerHTML = markUp;
+</div>`
+).join('');
+       galleryItems.insertAdjacentHTML('beforeend', markUp);
+
+      new SimpleLightbox('.gallery a', {
+captionDelay: 250,
+      });
+      
 }
 
-function onLoadMore() {
-fetchImages(searchQuery);
+
+function clearContainer() {
+  galleryItems.innerHTML = '';
 }
 
+function fetchButtonOnLoadMore() {
+  loadMoreBtn.disable();
+  fetchImages(searchQuery).then(r => {
+    renderMarkUp(r)
+  loadMoreBtn.enable()
+} ).catch(err => console.log(err));;
+}
 

@@ -7,9 +7,6 @@
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <div class="gallery">
-      <!-- Карточки изображений -->
-    </div>
     <form class="search-form" id="search-form">
       <input
         type="text"
@@ -18,9 +15,18 @@
         placeholder="Search images..."
       />
       <button type="submit">Search</button>
-      <button type="button" class="load-more">Load more</button>
     </form>
-
+    <div class="gallery">
+      <!-- Карточки изображений -->
+    </div>
+    <button type="button" class="load-more" data-action="load-more">
+      <span
+        class="spinner-border spinner-border-sm spinner is-hidden"
+        role="status"
+        aria-hidden="true"
+      ></span
+      ><span class="label">Load more</span>
+    </button>
     <script type="module" src="./index.js"></script>
     <skript type="module" src="./fetchImages.js"></skript>
   </body>
