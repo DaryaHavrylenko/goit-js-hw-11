@@ -27,13 +27,14 @@ function onSearch(e) {
     e.preventDefault();
     
   searchQuery = e.currentTarget.elements.searchQuery.value;
-  if (searchQuery === '') {
+  
+ if (searchQuery === '') {
     clearContainer();
     Notiflix.Notify.warning('Please, fill in the input field!');
     return;
   }
  
-  loadMoreBtn.show();
+ loadMoreBtn.show();
   resetPage();
   clearContainer();
   fetchButtonOnLoadMore();
@@ -42,10 +43,7 @@ function onSearch(e) {
  
 
 function renderMarkUp(r) {
-  if (r["hits"].length === 0) {
-    Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-    return;
-  }
+ 
    const markUp = r["hits"].map(({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) => 
    `<div class="photo-card">
     <a class="gallery__item" href="${largeImageURL}">
@@ -53,19 +51,29 @@ function renderMarkUp(r) {
   </a>
   <div class="info">
   <p class="info-item">
-      <b>Likes<span class="likes">${likes}</span></b>
+      <b>Likes
+      <span class="likes">${likes}</span>
+      </b>
     </p>
     <p class="info-item">
-      <b>Views<span class="views">${views}</span></b>
+      <b>Views
+      <span class="views">${views}</span>
+      </b>
     </p>
     <p class="info-item">
-      <b>Comments<span class="comments">${comments}</span></b>
+      <b>Comments
+      <span class="comments">${comments}</span>
+      </b>
     </p>
     <p class="info-item">
-      <b>Downloads<span class="downloads">${downloads}</span></b>
+      <b>Downloads
+      <span class="downloads">${downloads}</span>
+      </b>
     </p>
   </div>
-</div>`
+</div>
+
+`
 ).join('');
        galleryItems.insertAdjacentHTML('beforeend', markUp);
 
@@ -83,7 +91,17 @@ function clearContainer() {
 function fetchButtonOnLoadMore() {
   loadMoreBtn.disable();
   fetchImages(searchQuery).then(r => {
-    renderMarkUp(r)
+    if (r["hits"].length === 0) {
+      loadMoreBtn.hide();
+      Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+      return;
+    }
+    // if (r["hits"].length === r.totalHits.length - 1) {
+    //   loadMoreBtn.disable();
+    //   Notiflix.Notify.failure('Were sorry, but youve reached the end of search results.');
+    //   return;
+    // }
+  renderMarkUp(r)
   loadMoreBtn.enable()
 } ).catch(err => console.log(err));;
 }
