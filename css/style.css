@@ -3,25 +3,45 @@ body {
     Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   line-height: 1.5;
   color: #2a2a2a;
+ 
+}
+input {
+  padding: 10px;
+  margin-right: 5px;
+  background-color: rgb(237, 244, 244);
+  border-color: aqua;
+}
+
+form > button {
+  background-color: rgb(122, 248, 252);
+  color: #545353;
+  border: 2px solid #eeeeee;
+  border-radius: 5%;
 }
 
 img {
   display: block;
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 250px;
 }
 
 .search-form {
   display: flex;
   justify-content: center;
-  padding: 8px;
-  margin-bottom: 24px;
+  padding: 30px 0;
+  margin-bottom: 20px;
+  background-color: rgb(187, 221, 255);
 }
 
 .button {
   display: block;
+  padding: 10px;
   margin-left: auto;
   margin-right: auto;
+  background-color: rgb(185, 243, 245);
+  color: #545353;
+    border: 2px solid #eeeeee;
+    border-radius: 5%;
 }
 
 .button.is-hidden {
@@ -29,40 +49,57 @@ img {
 }
 
 .gallery {
-    display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        grid-gap: 20px;
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        max-width: calc(100vw - 80px);
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 20px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-width: calc(100vw - 80px);
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
 }
 
-img {
-    display: block;
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+a {
+  text-decoration: none;
+  color: #2a2a2a;
 }
 
- a {
-     text-decoration: none;
-     color: #2a2a2a;
- }
-
- .info {
-  display: flex;
+.info {
   text-align: center;
-  
-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14),
-        0px 2px 1px rgba(0, 0, 0, 0.2);
-    border-radius: 0px 0px 4px 4p;
- }
+  display: flex;
+  justify-content: space-around;
+  border-right: 2px solid #eeeeee;
+  border-bottom: 2px solid #eeeeee;
+  border-left: 2px solid #eeeeee;
+  box-shadow: 0px 1px 1px rgba(30, 144, 255, 0.12),
+    0px 4px 4px rgba(30, 144, 255, 0.06), 1px 4px 6px rgba(30, 144, 255, 0.16);
+}
 
- p {
-    display: flex;
-    
- }
+.info-item {
+  display: flex;
+flex-direction: column;
+  align-items: center;
+}
+
+/* .photo-card {
+  flex-basis: calc((100% - 90px) / 4);
+
+  margin-right: 30px;
+  margin-bottom: 30px;
+} */
+
+.photo-card:nth-last-child(4n) {
+     margin-right: 0;
+   } 
+
+.photo-card:nth-last-child(-n + 4) {
+     margin-bottom: 0;
+   } 
+
+
+.button {
+  display: block;
+  margin: auto;
+}

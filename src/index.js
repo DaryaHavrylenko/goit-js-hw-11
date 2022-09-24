@@ -1,12 +1,15 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
-import { fetchImages, resetPage } from "./fetchImages";
+import { fetchImages, resetPage } from "./fetchImagesAPI";
 import LoadMoreBtn from "./onLoadMoreBtn";
 
+let searchQuery = ''; 
+let per_page = 0;
+let page = 1;
+let totalHits = 0;
 
 const searchForm = document.querySelector('.search-form');
-
 const input = document.querySelector('input');
 const btnSubmit = document.querySelector('button');
 const galleryItems = document.querySelector('.gallery');
@@ -21,7 +24,7 @@ const loadMoreBtn = new LoadMoreBtn({
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', fetchButtonOnLoadMore)
 
-let searchQuery = ''; 
+
 
 function onSearch(e) {
     e.preventDefault();
@@ -61,7 +64,7 @@ function renderMarkUp(r) {
       </b>
     </p>
     <p class="info-item">
-      <b>Comments
+      <b> Comments
       <span class="comments">${comments}</span>
       </b>
     </p>
@@ -91,16 +94,19 @@ function clearContainer() {
 function fetchButtonOnLoadMore() {
   loadMoreBtn.disable();
   fetchImages(searchQuery).then(r => {
-    if (r["hits"].length === 0) {
+      if (page >= r.hits) {
+      loadMoreBtn.hide();
+    Notiflix.Notify.info(
+          `We're sorry, but you've reached the end of search results`
+        );
+        return;
+  }
+    if (!r.hits.length) {
       loadMoreBtn.hide();
       Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
       return;
     }
-    // if (r["hits"].length === r.totalHits.length - 1) {
-    //   loadMoreBtn.disable();
-    //   Notiflix.Notify.failure('Were sorry, but youve reached the end of search results.');
-    //   return;
-    // }
+  
   renderMarkUp(r)
   loadMoreBtn.enable()
 } ).catch(err => console.log(err));;
