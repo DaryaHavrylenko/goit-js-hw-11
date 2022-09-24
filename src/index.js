@@ -5,9 +5,9 @@ import { fetchImages, resetPage } from "./fetchImagesAPI";
 import LoadMoreBtn from "./onLoadMoreBtn";
 
 let searchQuery = ''; 
-let per_page = 0;
-let page = 1;
-let totalHits = 0;
+// let per_page = 0;
+// let page = 1;
+// let totalHits = 0;
 
 const searchForm = document.querySelector('.search-form');
 const input = document.querySelector('input');
@@ -32,7 +32,8 @@ function onSearch(e) {
   searchQuery = e.currentTarget.elements.searchQuery.value;
   
  if (searchQuery === '') {
-    clearContainer();
+   clearContainer();
+   loadMoreBtn.hide();
     Notiflix.Notify.warning('Please, fill in the input field!');
     return;
   }
@@ -46,8 +47,7 @@ function onSearch(e) {
  
 
 function renderMarkUp(r) {
- 
-   const markUp = r["hits"].map(({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) => 
+ const markUp = r["hits"].map(({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) => 
    `<div class="photo-card">
     <a class="gallery__item" href="${largeImageURL}">
   <img src="${webformatURL}" alt="${tags}" loading="lazy" />
@@ -86,29 +86,28 @@ captionDelay: 250,
       
 }
 
-
-function clearContainer() {
-  galleryItems.innerHTML = '';
-}
-
 function fetchButtonOnLoadMore() {
   loadMoreBtn.disable();
   fetchImages(searchQuery).then(r => {
-      if (page >= r.hits) {
+     if (r.total === 0) {
+      loadMoreBtn.hide();
+      Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+      return;
+    }
+      if (r.hits.length === 0) {
       loadMoreBtn.hide();
     Notiflix.Notify.info(
           `We're sorry, but you've reached the end of search results`
         );
         return;
   }
-    if (!r.hits.length) {
-      loadMoreBtn.hide();
-      Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-      return;
-    }
-  
+   
   renderMarkUp(r)
   loadMoreBtn.enable()
 } ).catch(err => console.log(err));;
+}
+
+function clearContainer() {
+  galleryItems.innerHTML = '';
 }
 
