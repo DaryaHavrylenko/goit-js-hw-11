@@ -5,15 +5,22 @@ import { fetchImages, resetPage } from "./fetchImagesAPI";
 import LoadMoreBtn from "./onLoadMoreBtn";
 
 let searchQuery = ''; 
-// let per_page = 0;
-// let page = 1;
-// let totalHits = 0;
 
+
+let per_page = 40;
+let page = 1;
+
+
+
+let ligthBox = new SimpleLightbox('.gallery a', {
+captionDelay: 250,
+});
+      
 const searchForm = document.querySelector('.search-form');
 const input = document.querySelector('input');
 const btnSubmit = document.querySelector('button');
 const galleryItems = document.querySelector('.gallery');
-// const btnLoadMore = document.querySelector(".load-more");
+
 
 const loadMoreBtn = new LoadMoreBtn({
   selector: '[data-action="load-more"]',
@@ -22,7 +29,7 @@ const loadMoreBtn = new LoadMoreBtn({
 
 
 searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.refs.button.addEventListener('click', fetchButtonOnLoadMore)
+loadMoreBtn.refs.button.addEventListener('click', onSubmit)
 
 
 
@@ -37,11 +44,11 @@ function onSearch(e) {
     Notiflix.Notify.warning('Please, fill in the input field!');
     return;
   }
- 
+
  loadMoreBtn.show();
   resetPage();
   clearContainer();
-  fetchButtonOnLoadMore();
+onSubmit();
     
     }
  
@@ -80,13 +87,12 @@ function renderMarkUp(r) {
 ).join('');
        galleryItems.insertAdjacentHTML('beforeend', markUp);
 
-      new SimpleLightbox('.gallery a', {
-captionDelay: 250,
-      });
+
+  ligthBox.refresh();
       
 }
 
-function fetchButtonOnLoadMore() {
+function onSubmit() {
   loadMoreBtn.disable();
   fetchImages(searchQuery).then(r => {
      if (r.total === 0) {
@@ -100,7 +106,20 @@ function fetchButtonOnLoadMore() {
           `We're sorry, but you've reached the end of search results`
         );
         return;
-  }
+    }
+    
+    let delta = Math.ceil(r.totalHits / per_page);
+    
+    if (page === delta) {
+      loadMoreBtn.hide();
+ Notiflix.Notify.info(
+          `We're sorry, but you've reached the end of search results`
+        );
+    }
+  
+   
+
+  
    
   renderMarkUp(r)
   loadMoreBtn.enable()
