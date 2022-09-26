@@ -136,7 +136,7 @@ async function onClickLoadMore() {
 
   
   
-    delta = Math.ceil(r.totalHits / per_page);
+  let delta = Math.ceil(r.totalHits / per_page);
     
     if (page === delta) {
    loadMoreBtn.hide();
