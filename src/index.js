@@ -9,7 +9,7 @@ let searchQuery = '';
 
 let per_page = 40;
 let page = 1;
-
+let totalHits;
 
 
 let ligthBox = new SimpleLightbox('.gallery a', {
@@ -29,7 +29,7 @@ const loadMoreBtn = new LoadMoreBtn({
 
 
 searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.refs.button.addEventListener('click', onSubmit)
+loadMoreBtn.refs.button.addEventListener('click', onClickLoadMore)
 
 
 
@@ -48,8 +48,8 @@ function onSearch(e) {
  loadMoreBtn.show();
   resetPage();
   clearContainer();
-onSubmit();
-    
+  onSubmit();
+ 
     }
  
 
@@ -93,6 +93,7 @@ function renderMarkUp(r) {
 }
 
 function onSubmit() {
+   
   loadMoreBtn.disable();
   fetchImages(searchQuery).then(r => {
      if (r.total === 0) {
@@ -107,26 +108,40 @@ function onSubmit() {
         );
         return;
     }
-    
+
     let delta = Math.ceil(r.totalHits / per_page);
     
     if (page === delta) {
-      loadMoreBtn.hide();
+   loadMoreBtn.hide();
  Notiflix.Notify.info(
           `We're sorry, but you've reached the end of search results`
         );
     }
-  
-   
 
-  
-   
   renderMarkUp(r)
-  loadMoreBtn.enable()
+    loadMoreBtn.enable()
+   
 } ).catch(err => console.log(err));;
 }
+
 
 function clearContainer() {
   galleryItems.innerHTML = '';
 }
 
+async function onClickLoadMore() {
+  page += 1;
+  const r = await fetchImages(searchQuery);
+
+  renderMarkUp(r);
+  
+    delta = Math.ceil(r.totalHits / per_page);
+    
+    if (page === delta) {
+   loadMoreBtn.hide();
+ Notiflix.Notify.info(
+          `We're sorry, but you've reached the end of search results`
+        );
+    }
+
+}

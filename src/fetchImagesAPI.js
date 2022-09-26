@@ -1,5 +1,5 @@
 import axios from "axios"
-import LoadMoreBtn from "./onLoadMoreBtn";
+
 // let searchQuery = '';
 let page = 1;
 
@@ -12,9 +12,10 @@ async function fetchImages(searchQuery) {
 
 
 
-function incrementPage() {
+ function incrementPage() {
     page += 1;
 }
+
 function resetPage() {
     page = 1;
 }
