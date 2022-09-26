@@ -9,7 +9,7 @@ let searchQuery = '';
 
 let per_page = 40;
 let page = 1;
-let totalHits;
+
 
 
 let ligthBox = new SimpleLightbox('.gallery a', {
