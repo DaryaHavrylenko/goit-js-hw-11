@@ -9,7 +9,7 @@ let searchQuery = '';
 
 let per_page = 40;
 let page = 1;
-
+let totalHits;
 
 
 let ligthBox = new SimpleLightbox('.gallery a', {
@@ -115,7 +115,8 @@ function onSubmit() {
    loadMoreBtn.hide();
  Notiflix.Notify.info(
           `We're sorry, but you've reached the end of search results`
-        );
+          );
+   
     }
 
   renderMarkUp(r)
@@ -133,7 +134,7 @@ async function onClickLoadMore() {
   page += 1;
   const r = await fetchImages(searchQuery);
 
-  renderMarkUp(r);
+  
   
     delta = Math.ceil(r.totalHits / per_page);
     
@@ -141,7 +142,8 @@ async function onClickLoadMore() {
    loadMoreBtn.hide();
  Notiflix.Notify.info(
           `We're sorry, but you've reached the end of search results`
-        );
+      );
+      
     }
-
+renderMarkUp(r);
 }
